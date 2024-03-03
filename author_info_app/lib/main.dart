@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'author_cubit.dart';
+import 'author_works_screen.dart'; 
 
 void main() {
   runApp(MyApp());
@@ -60,9 +61,26 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Author Name: ${authorInfo['name']}'),
-                      Text('Birth Date: ${authorInfo['dates']}'),
-                      Text('Most Important Work: ${authorInfo['mostImportantWork']}'),
+                      Text('Author Name: ${authorInfo['name'] ?? 'N/A'}'),
+                      Text('Birth Date: ${authorInfo['dates'] ?? 'N/A'}'),
+                      Text('Most Important Work: ${authorInfo['mostImportantWork'] ?? 'N/A'}'),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          final authorKey = authorInfo['key'];
+                          if (authorKey != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AuthorWorksScreen(authorKey: authorKey),
+                              ),
+                            );
+                          } else {
+                            print('Author key is null');
+                          }
+                        },
+                        child: Text('View Author Works'),
+                      ),
                     ],
                   );
                 } else if (state is AuthorError) {

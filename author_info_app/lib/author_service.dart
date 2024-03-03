@@ -1,4 +1,3 @@
-// author_service.dart
 
 import 'package:dio/dio.dart';
 
@@ -12,15 +11,28 @@ class AuthorService {
         queryParameters: {'q': authorName},
       );
 
-      final authorData = response.data['docs'][0]; // İlk yazarın bilgilerini alıyoruz.
+      final authorData = response.data['docs'][0];
 
       return {
         'name': authorData['name'] ?? '',
         'dates': authorData['birth_date'] ?? 'N/A',
         'mostImportantWork': authorData['top_work'] ?? 'N/A',
+        'key': authorData['key'] ?? '', // Yazarın anahtarını ekliyoruz
       };
     } catch (error) {
       throw Exception('Failed to load author information');
+    }
+  }
+
+  Future<List<dynamic>> getAuthorWorks(String authorKey) async {
+    try {
+      final response = await _dio.get(
+        'https://openlibrary.org/authors/$authorKey/works.json',
+      );
+
+      return response.data['entries'] ?? [];
+    } catch (error) {
+      throw Exception('Failed to load author works');
     }
   }
 }
